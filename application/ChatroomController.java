@@ -89,27 +89,11 @@ public class ChatroomController extends Thread{
         try{
             fileReader = new FileReader(chatFile);
             bufferedReader = new BufferedReader(fileReader);
-            while((line = bufferedReader.readLine()) != null){
+            while((line = bufferedReader.readLine()) != null) {
                 lineCount += 1;
+                lastLine = line;
                 //System.out.println(lineCount + ":" + line);
             }
-
-
-            fileReader = new FileReader(chatFile);
-            bufferedReader = new BufferedReader(fileReader);
-            int max = lineCount;
-            int newCount = 0;
-            lineCount = 1;
-
-            while((line = bufferedReader.readLine()) != null){
-                if(lineCount < max){
-                    //System.out.println(lineCount + ":" + line);
-                    lineCount += 1;
-                }else{
-                    lastLine = line;
-                }
-            }
-
             bufferedReader.close();
         }catch (IOException e){
             System.out.println("File input error");
