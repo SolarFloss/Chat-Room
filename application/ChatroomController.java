@@ -62,13 +62,7 @@ public class ChatroomController extends Thread{
 
     public boolean checkForFile(String fileName){
         File f = new File(fileName);
-        boolean pass = false;
-        if(f.exists()){
-            pass = true;
-        }else{
-            pass = false;
-        }
-        return pass;
+        return f.exists();
     }
 
     public void initialize(){
