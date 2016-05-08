@@ -114,10 +114,7 @@ public class ChatroomController extends Thread{
 
                 printWriter.println(message);
                 printWriter.close();
-
-
-                //bufferedWriter.write("\n" + message);
-
+                fileWriter.close();
                 bufferedWriter.close();
             }catch(IOException e){
                 e.printStackTrace();
@@ -142,12 +139,24 @@ public class ChatroomController extends Thread{
         }
     }
 
+
     public void run(){
+        int chatCount = 0;
         try {
             while(running) {
                 for (WatchEvent event : watchKey.pollEvents()) {
                     if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
-                        lblTextArea.appendText("\n" + getLastLine());
+                        if(getLastLine() != null)
+                         lblTextArea.appendText("\n" + getLastLine());
+                        chatCount += 1;
+                        if(chatCount >= 20) {
+                            try {
+                                new PrintWriter(chatFile).close();
+                                chatCount = 0;
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
                 thread.sleep(50);
