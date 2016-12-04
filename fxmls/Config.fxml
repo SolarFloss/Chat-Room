@@ -6,24 +6,43 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="143.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ConfigController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ConfigController">
    <children>
-      <HBox alignment="CENTER" prefHeight="68.0" prefWidth="600.0" spacing="30.0">
+      <HBox alignment="CENTER" prefHeight="48.0" prefWidth="600.0" spacing="30.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Chat File Directory:" />
-            <TextField fx:id="txtChatFile" prefHeight="31.0" prefWidth="322.0" />
-            <Button fx:id="chatFileBrowse" mnemonicParsing="false" onAction="#fileBrowseClicked" text="Browse" />
-         </children>
-      </HBox>
-      <Separator prefHeight="29.0" prefWidth="600.0" />
-      <HBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="600.0" spacing="20.0">
-         <children>
-            <Button fx:id="btnApply" mnemonicParsing="false" onAction="#applyButtonClicked" prefHeight="31.0" prefWidth="100.0" text="Apply" />
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancelButtonClicked" prefHeight="31.0" prefWidth="100.0" text="Cancel" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Made by Nicholas Morris" />
+            <Hyperlink fx:id="lblCodeLink" onAction="#codeLinkClicked" text="Code Here (:" />
+            <Hyperlink fx:id="lblTwitterLink" onAction="#twitterLinkClicked" text="Twitter (;" />
          </children>
          <padding>
-            <Insets right="10.0" />
+            <Insets top="10.0" />
          </padding>
       </HBox>
+      <Separator prefHeight="29.0" prefWidth="600.0" />
+      <VBox prefHeight="361.0" prefWidth="560.0" spacing="20.0">
+         <children>
+            <TextFlow prefHeight="87.0" prefWidth="560.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="This is a pretty basic chat room with no fancy schmancy features. If you're going to be stupid at least use a ScreenName that can't be easily traced to you. There is no profanity filter because I don't feel like making one. Anyways I'm not responsible for whatever you do here. Have fun or don't, I don't really care &lt;3. If you find any major issues or just have something to tell me message me on Twitter I guess" wrappingWidth="540.4541015625" />
+               </children>
+            </TextFlow>
+            <Separator prefWidth="200.0" />
+            <TextFlow prefHeight="86.0" prefWidth="560.0">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="560.0" spacing="10.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="I tried to make this as easy as possible to use but I'll explain how to use it very quickly." wrappingWidth="559.73046875" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="1. Select a ScreenName. Try to make it somewhat appropriate..." />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="2. Browse for a chat room by clicking the browse button and selecting a file in the window that pops up. You can make your own chat rooms simply by creating new files. If you want to join someone else's just click the file and then click the Open button. Please do not delete other people's chat rooms. It's just rude. Only delete chat rooms that you have made." wrappingWidth="557.9638671875" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="3. Click the Enter button and have a great time!" wrappingWidth="560.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </TextFlow>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="-5.0" />
+         </VBox.margin>
+      </VBox>
    </children>
 </VBox>

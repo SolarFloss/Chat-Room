@@ -11,6 +11,8 @@ import javafx.scene.input.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.nio.file.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Scanner;
 import java.nio.file.WatchKey;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +33,7 @@ public class ChatroomController extends Thread{
     @FXML
     public TextField lblMessage;
 
-    private static String chatFile = "C:/Users/Nicholas/Desktop/Chat Folder/ChatFile.txt";
+    private static String chatFile = Controller.directory;
     //private static String testFile = "C:/Users/Nicholas/Dropbox/test.txt";
     private Thread thread;
     public static String screenName = Controller.getScreenName();
@@ -46,6 +48,9 @@ public class ChatroomController extends Thread{
     private WatchKey watchKey;
     private Path directory;
     private static boolean running = true;
+    private boolean god = false;
+    private Calendar calendar;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public static void setChatFile(String directory){
         chatFile = directory;
@@ -57,7 +62,22 @@ public class ChatroomController extends Thread{
     }
 
 
-
+    public void getPreviousMessages(){
+        String line = null;
+        String lastLine = null;
+        int lineCount = 0;
+        try{
+            fileReader = new FileReader(chatFile);
+            bufferedReader = new BufferedReader(fileReader);
+            while((line = bufferedReader.readLine()) != null) {
+                lineCount += 1;
+                lblTextArea.appendText(line + "\n");
+            }
+            bufferedReader.close();
+        }catch (IOException e){
+            System.out.println("File input error");
+        }
+    }
 
 
     public boolean checkForFile(String fileName){
@@ -67,7 +87,8 @@ public class ChatroomController extends Thread{
 
     public void initialize(){
         if(lblTextArea != null){
-            lblTextArea.appendText("Welcome to that Chatroom\n");
+            getPreviousMessages();
+            lblTextArea.appendText("\n\nWelcome to " + Controller.fileName +  "\n\nTry not to do anything too stupid.\n\n");
 
             try {
                 this.watchService = FileSystems.getDefault().newWatchService();
@@ -81,6 +102,7 @@ public class ChatroomController extends Thread{
             thread.start();
         }
     }
+
 
     public String getLastLine(){
         String line = null;
@@ -102,7 +124,13 @@ public class ChatroomController extends Thread{
     }
 
     public void sendMessage(){
-        String message = "[" + this.screenName + "]: " + lblMessage.getText();
+
+        String message = null;
+        calendar = Calendar.getInstance();
+
+
+
+        message = "[" + simpleDateFormat.format(calendar.getTime()) + "] " + this.screenName +  ": " + lblMessage.getText();
 
         //lblTextArea.appendText(message);
         if(checkForFile(chatFile)){
@@ -148,7 +176,8 @@ public class ChatroomController extends Thread{
                     if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
                         if(getLastLine() != null)
                          lblTextArea.appendText("\n" + getLastLine());
-                        chatCount += 1;
+                        //chatCount += 1;
+                        /*
                         if(chatCount >= 20) {
                             try {
                                 new PrintWriter(chatFile).close();
@@ -157,6 +186,7 @@ public class ChatroomController extends Thread{
                                 e.printStackTrace();
                             }
                         }
+                        */
                     }
                 }
                 thread.sleep(50);

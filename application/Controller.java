@@ -1,16 +1,19 @@
 package application;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -21,7 +24,7 @@ import java.io.IOException;
 public class Controller {
 
     @FXML
-    public PasswordField lblPassword;
+    public TextField lblChatroomName;
 
     @FXML
     public TextField lblScreenName;
@@ -33,27 +36,42 @@ public class Controller {
     public Button btnEnter;
 
     @FXML
-    public Button btnConfig;
+    public Button btnAbout;
+
+    @FXML
+    public Button btnBrowse;
+
+
+
 
     private static String screenName;
+    private static final int MAX_LENGTH = 10;
+    private FileChooser fileChooser;
+    public static String directory;
+    public static String fileName;
+
 
     public static String getScreenName() {
         return screenName;
     }
     public static Stage stage;
-    public static Stage configStage;
+    public static Stage aboutStage;
 
 
 
-    public boolean checkForFile(String fileName){
-        File f = new File(fileName);
-        boolean pass = false;
-        if(f.exists()){
-            pass = true;
-        }else{
-            pass = false;
+
+
+    public void browseButtonClick(){
+        fileChooser = new FileChooser();
+        File homeDirectory = new File("..\\The Chat\\Rooms");
+        fileChooser.setInitialDirectory(homeDirectory);
+        fileChooser.setTitle("Select the chat file");
+        File file = fileChooser.showOpenDialog(Controller.aboutStage);
+        if (file != null) {
+            directory = file.getAbsolutePath();
+            fileName = file.getName();
+            lblChatroomName.setText(fileName);
         }
-        return pass;
     }
 
     private void openChatroom(){
@@ -63,7 +81,7 @@ public class Controller {
             Parent root = FXMLLoader.load(getClass().getResource("/fxmls/Chatroom.fxml"));
             stage.setTitle("The Chatroom");
             stage.setResizable(false);
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 916, 636));
             stage.show();
             stage.setOnCloseRequest(e -> ChatroomController.closeProgram());
             ChatroomController chat = new ChatroomController();
@@ -74,41 +92,57 @@ public class Controller {
         }
     }
 
+
     public void openConfig(){
         try{
-            configStage = new Stage();
+            aboutStage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxmls/Config.fxml"));
-            configStage.setTitle("Config");
-            configStage.setResizable(false);
-            configStage.setScene(new Scene(root,600,143));
-            configStage.initModality(Modality.APPLICATION_MODAL);
-            configStage.show();
+            aboutStage.setTitle("About");
+            aboutStage.setResizable(false);
+            aboutStage.setScene(new Scene(root,600,437));
+            aboutStage.initModality(Modality.APPLICATION_MODAL);
+            aboutStage.show();
             //ConfigController config = new ConfigController();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
+
     public void checkConditions(){
-        if(checkForFile(ChatroomController.getChatFile())) {
-            if (lblPassword.getText().equals("password")) {
-                if (!lblScreenName.getText().equals("")) {
-                    openChatroom();
-                } else if (lblScreenName.getText().equals("")) {
-                    lblScreenName.setText("anonymous");
-                    openChatroom();
+        if(checkForFile(directory)) {
+                if (lblScreenName.getText().length() < 15) {
+                    if (!lblScreenName.getText().equals("")) {
+                        openChatroom();
+                    } else if (lblScreenName.getText().equals("")) {
+                        lblScreenName.setText("anon");
+                        openChatroom();
+                    }
+                } else {
+                    lblStatus.setText("Status: Your screen name is too long!");
                 }
-            }else{
-                lblStatus.setText("Status: Incorrect password!");
-            }
         }else{
-            lblStatus.setText("Status: No chat file selected");
+            lblStatus.setText("Status: No chat room selected");
         }
+    }
+
+    public boolean checkForFile(String fileName){
+        boolean pass = false;
+        if(!lblChatroomName.getText().equals("")){
+            try{
+                File f = new File(fileName);
+                pass = f.exists();
+            }catch (NullPointerException e){
+                pass = false;
+            }
+        }
+        return pass;
     }
 
 
     public void onKeyPress(KeyEvent event){
-        checkConditions();
+        if(event.getCode() == KeyCode.ENTER)
+         checkConditions();
     }
 
     public void enterButtonClicked(ActionEvent actionEvent) {
@@ -118,4 +152,6 @@ public class Controller {
     public void configButtonClicked(ActionEvent actionEvent) {
         openConfig();
     }
+
+
 }
