@@ -1,18 +1,18 @@
 package application;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Observable;
 
 public class Controller {
 
@@ -41,6 +42,12 @@ public class Controller {
     @FXML
     public Button btnBrowse;
 
+    @FXML
+    public ListView listView;
+
+    @FXML
+    public Button btnCreateRoom;
+
 
 
 
@@ -58,13 +65,25 @@ public class Controller {
     public static Stage aboutStage;
 
 
+    public void populateList(){
 
+        ObservableList items = FXCollections.observableArrayList();
+        listView.setItems(items);
+
+        File dir = new File("..\\The Chat\\Rooms");
+        File[] directoryListing = dir.listFiles();
+        if(directoryListing != null){
+            for(File child : directoryListing){
+                items.add(child.getName());
+            }
+        }
+    }
 
 
     public void browseButtonClick(){
         fileChooser = new FileChooser();
-        File homeDirectory = new File("..\\The Chat\\Rooms");
-        fileChooser.setInitialDirectory(homeDirectory);
+        //File homeDirectory = new File("..\\The Chat\\Rooms");
+        //fileChooser.setInitialDirectory(homeDirectory);
         fileChooser.setTitle("Select the chat file");
         File file = fileChooser.showOpenDialog(Controller.aboutStage);
         if (file != null) {
@@ -99,7 +118,7 @@ public class Controller {
             Parent root = FXMLLoader.load(getClass().getResource("/fxmls/Config.fxml"));
             aboutStage.setTitle("About");
             aboutStage.setResizable(false);
-            aboutStage.setScene(new Scene(root,600,437));
+            aboutStage.setScene(new Scene(root,600,462));
             aboutStage.initModality(Modality.APPLICATION_MODAL);
             aboutStage.show();
             //ConfigController config = new ConfigController();
