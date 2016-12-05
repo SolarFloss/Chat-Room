@@ -24,8 +24,6 @@ import java.util.Observable;
 
 public class Controller {
 
-    @FXML
-    public TextField lblChatroomName;
 
     @FXML
     public TextField lblScreenName;
@@ -39,14 +37,15 @@ public class Controller {
     @FXML
     public Button btnAbout;
 
-    @FXML
-    public Button btnBrowse;
 
     @FXML
     public ListView listView;
 
     @FXML
     public Button btnCreateRoom;
+
+    @FXML
+    public TextField txtNewRoom;
 
 
 
@@ -56,7 +55,8 @@ public class Controller {
     private FileChooser fileChooser;
     public static String directory;
     public static String fileName;
-
+    private File rooms = new File("D:\\Rooms");
+    private boolean stuffLoaded = false;
 
     public static String getScreenName() {
         return screenName;
@@ -65,21 +65,63 @@ public class Controller {
     public static Stage aboutStage;
 
 
+
+    //Populate the listview with the current rooms
     public void populateList(){
+        //Only update the list if there is nothing selected
+        if(rooms.exists() && listView.getSelectionModel().getSelectedItem() == null){
+            ObservableList items = FXCollections.observableArrayList();
+            listView.setItems(items);
 
-        ObservableList items = FXCollections.observableArrayList();
-        listView.setItems(items);
+            File[] directoryListing = rooms.listFiles();
 
-        File dir = new File("..\\The Chat\\Rooms");
-        File[] directoryListing = dir.listFiles();
-        if(directoryListing != null){
-            for(File child : directoryListing){
-                items.add(child.getName());
+
+            if(directoryListing != null){
+                for(File child : directoryListing) {
+                    items.add(child.getName());
+                }
             }
+        }else{
+            //Make the directory if it doesn't exist
+            rooms.mkdir();
         }
     }
 
 
+    public void createRoomClicked(){
+        if(rooms.exists()){
+            if(!txtNewRoom.getText().equals("")) {
+                File newRoom = new File(rooms.getAbsolutePath() + "\\" + txtNewRoom.getText() + ".txt");
+                try {
+                    newRoom.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ObservableList items = FXCollections.observableArrayList();
+                listView.setItems(items);
+
+                File[] directoryListing = rooms.listFiles();
+
+
+                if (directoryListing != null) {
+                    for (File child : directoryListing) {
+                        items.add(child.getName());
+                    }
+                }
+            }else{
+                lblStatus.setText("Status: Your room must have a name!");
+            }
+        }else{
+            //This is redundant but whatever
+            rooms.mkdir();
+            createRoomClicked();
+        }
+    }
+
+
+
+    /*
     public void browseButtonClick(){
         fileChooser = new FileChooser();
         //File homeDirectory = new File("..\\The Chat\\Rooms");
@@ -92,13 +134,15 @@ public class Controller {
             lblChatroomName.setText(fileName);
         }
     }
+    */
 
     private void openChatroom(){
         try {
+            ChatroomController.setChatFile(directory);
             Main.stage.close();
             stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxmls/Chatroom.fxml"));
-            stage.setTitle("The Chatroom");
+            stage.setTitle(listView.getSelectionModel().getSelectedItem().toString());
             stage.setResizable(false);
             stage.setScene(new Scene(root, 916, 636));
             stage.show();
@@ -147,25 +191,30 @@ public class Controller {
 
     public boolean checkForFile(String fileName){
         boolean pass = false;
-        if(!lblChatroomName.getText().equals("")){
             try{
                 File f = new File(fileName);
                 pass = f.exists();
             }catch (NullPointerException e){
                 pass = false;
             }
-        }
         return pass;
     }
 
 
-    public void onKeyPress(KeyEvent event){
-        if(event.getCode() == KeyCode.ENTER)
-         checkConditions();
+    public void newRoomKeyPress(KeyEvent event){
+        if(event.getCode() == KeyCode.ENTER) {
+            checkConditions();
+        }
     }
 
     public void enterButtonClicked(ActionEvent actionEvent) {
-        checkConditions();
+        try {
+            fileName = listView.getSelectionModel().getSelectedItem().toString();
+            directory = rooms.getAbsolutePath() + "\\" + listView.getSelectionModel().getSelectedItem().toString();
+            checkConditions();
+        }catch(Exception e){
+            lblStatus.setText("Status: Did you pick a room?");
+        }
     }
 
     public void configButtonClicked(ActionEvent actionEvent) {

@@ -15,7 +15,7 @@ public class Main extends Application {
         stage.setTitle("Login");
         stage.setResizable(false);
         //stage.setScene(new Scene(root, 500, 500));
-        stage.setScene(new Scene(root, 318, 272));
+        stage.setScene(new Scene(root, 318, 500));
         stage.show();
     }
 

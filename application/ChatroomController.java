@@ -34,11 +34,8 @@ public class ChatroomController extends Thread{
     public TextField lblMessage;
 
     private static String chatFile = Controller.directory;
-    //private static String testFile = "C:/Users/Nicholas/Dropbox/test.txt";
     private Thread thread;
     public static String screenName = Controller.getScreenName();
-    private static int num = 0;
-    private Scanner in;
     private FileWriter fileWriter;
     private BufferedReader bufferedReader;
     private FileReader fileReader;
@@ -48,12 +45,11 @@ public class ChatroomController extends Thread{
     private WatchKey watchKey;
     private Path directory;
     private static boolean running = true;
-    private boolean god = false;
     private Calendar calendar;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    public static void setChatFile(String directory){
-        chatFile = directory;
+    public static void setChatFile(String dir){
+        chatFile = dir;
     }
 
 
@@ -104,7 +100,7 @@ public class ChatroomController extends Thread{
     }
 
 
-    public String getLastLine(){
+    private String getLastLine(){
         String line = null;
         String lastLine = null;
         int lineCount = 0;
@@ -123,32 +119,39 @@ public class ChatroomController extends Thread{
         return lastLine;
     }
 
-    public void sendMessage(){
+    private void sendMessage(){
 
         String message = null;
         calendar = Calendar.getInstance();
 
 
 
-        message = "[" + simpleDateFormat.format(calendar.getTime()) + "] " + this.screenName +  ": " + lblMessage.getText();
+        message = "[" + simpleDateFormat.format(calendar.getTime()) + "]   (" + this.screenName +  "): " + lblMessage.getText();
 
         //lblTextArea.appendText(message);
         if(checkForFile(chatFile)){
-            lblMessage.setText("");
-            try{
-                fileWriter = new FileWriter(chatFile,true);
-                bufferedWriter = new BufferedWriter(fileWriter);
-                printWriter = new PrintWriter(bufferedWriter);
+            if(message.length() < 200) {
+                lblMessage.setText("");
+                try {
+                    fileWriter = new FileWriter(chatFile, true);
+                    bufferedWriter = new BufferedWriter(fileWriter);
+                    printWriter = new PrintWriter(bufferedWriter);
 
-                printWriter.println(message);
-                printWriter.close();
-                fileWriter.close();
-                bufferedWriter.close();
-            }catch(IOException e){
-                e.printStackTrace();
+                    printWriter.println(message);
+                    printWriter.close();
+                    fileWriter.close();
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                lblMessage.setText("");
+                lblTextArea.appendText("\n\nMessage must be under 200 characters!\n");
             }
         }else{
-            System.out.println(chatFile);
+            lblMessage.setText("");
+            lblTextArea.appendText("\n\nSomething has gone wrong! Maybe someone deleted the chat room file!\n" +
+                    "Restart the program and join another chat room\n\n");
         }
     }
 
@@ -169,7 +172,7 @@ public class ChatroomController extends Thread{
 
 
     public void run(){
-        int chatCount = 0;
+        //int chatCount = 0;
         try {
             while(running) {
                 for (WatchEvent event : watchKey.pollEvents()) {
