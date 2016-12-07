@@ -15,7 +15,11 @@ Using it is very simple.
 1\. Create a screen name
 
 
-2\. Browse for a text file that is in a directory that is shared with either the person you want to talk to or is shared with a group of people. <b> This is what makes the chat room work. If the file can't be seen by other people they will not be able to talk to you.</b>
+2\. Choose a room on the list. If the list is empty create a new room by typing in a unique room name in the bar below the list and then clicking Create Room when you are satisfied. The name should pop up in the list.
+  2a\. If you created a room you have to select it from the list to enter.
+
 
 
 3\. Click the Enter button and have a good time!
+
+
