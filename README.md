@@ -24,7 +24,7 @@ Using it is very simple.
 
 
 
-![alt tag](/resources/Login.png)
-![alt tag](/resources/Chatting.png)
+![alt tag](/resources/Login.PNG)
+![alt tag](/resources/Chatting.PNG)
 
 
