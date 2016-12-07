@@ -23,3 +23,8 @@ Using it is very simple.
 3\. Click the Enter button and have a good time!
 
 
+
+![alt tag](/resources/Login.png)
+![alt tag](/resources/Chatting.png)
+
+
